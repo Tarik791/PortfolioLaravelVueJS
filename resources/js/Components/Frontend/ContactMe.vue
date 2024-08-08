@@ -38,7 +38,7 @@ const submit = () => {
         <div class="container mx-auto">
             <div class="flex flex-col items-center text-center">
                 <h2 class="section-title">Contact Me</h2>
-                <p class="subtitle">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Delectus sequi consequuntur harum quos dolorum ex corporis ea ipsa, dignissimos maxime!</p>
+                <p class="subtitle">                    I'm here to help with your next project or answer any questions you may have. Feel free to reach out and let’s discuss how we can work together.</p>
             </div>
             <div class="flex flex-col lg:flex-row lg:gap-x-8">
                 <div class="container mx-auto">
@@ -53,7 +53,7 @@ const submit = () => {
                         <h4 class="font-body text-xl mb-1">Have a question?</h4>
                     
                         <p class="mb-1 text-paragraph">I am here to help you</p>
-                        <p class="text-accent font-normal">Email me at terzotarik@gmail.com</p>
+                        <p class="text-accent font-normal">Email: terzotarik@gmail.com</p>
                     </div>
                 </div>
                     <div class="flex flex-col lg:flex-row gap-x-4">
@@ -66,7 +66,6 @@ const submit = () => {
                           </div>
                         <h4 class="font-body text-xl mb-1">Current Location</h4>
                         <p class="mb-1 text-paragraph">Sarajevo, Bosnia and Herzegovina</p>
-                        <p class="text-accent font-normal">Servin clients worldwide</p>
                     </div>
                     </div>
                 </div>
