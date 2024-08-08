@@ -19,10 +19,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
-        $projects = ProjectResource::collection(Project::with('skill')->get());
+        $projects = ProjectResource::collection(Project::with('skills')->get());
 
-        return Inertia::render('Projects/Index', compact('projects'));
+        return Inertia::render('Projects/Index', ['projects' => $projects]);
     }
 
     /**
@@ -47,40 +46,29 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => ['required', 'image'],
             'name' => ['required', 'min:3'],
-            'skill_id' => ['required'],
+            'skill_ids' => ['required', 'array'],
+            'skill_ids.*' => ['exists:skills,id'],
+            'image' => ['nullable', 'image'],
+            'image_2' => ['nullable', 'image'],
+            'image_3' => ['nullable', 'image'],
+            'image_4' => ['nullable', 'image'],
+            'image_5' => ['nullable', 'image'],
+            'image_6' => ['nullable', 'image'],
         ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('projects', 'public');
-            Project::create([
-                'skill_id' => $request->skill_id,
-                'name' => $request->name,
-                'image' => $image,
-                'project_url' => $request,
-            ]);
+        $data = $request->only(['name', 'project_url', 'skill_ids']);
 
-            return Redirect::route('projects.index')->with('message', 'Project created successfully!');
+        foreach (['image', 'image_2', 'image_3', 'image_4', 'image_5', 'image_6'] as $imageField) {
+            if ($request->hasFile($imageField)) {
+                $data[$imageField] = $request->file($imageField)->store('projects', 'public');
+            }
         }
 
-        return Redirect::back();
-        //
-    }
+        $project = Project::create($data);
+        $project->skills()->attach($request->skill_ids);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
-        //
-
-        $skills = Skill::all();
-
-        return Inertia::render('Projects/Edit', compact('project', 'skills'));
+        return Redirect::route('projects.index')->with('message', 'Project created successfully!');
     }
 
     /**
@@ -92,13 +80,13 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
-        $image = $project->image;
         $request->validate([
             'name' => ['required', 'min:3'],
-            'skill_id' => ['required'],
+            'skill_ids' => ['required', 'array'],
+            'skill_ids.*' => ['exists:skills,id'],
         ]);
 
+        $image = $project->image;
         if ($request->hasFile('image')) {
             Storage::delete($project->image);
             $image = $request->file('image')->store('projects', 'public');
@@ -106,12 +94,33 @@ class ProjectController extends Controller
 
         $project->update([
             'name' => $request->name,
-            'skill_id' => $request->skill_id,
             'project_url' => $request->project_url,
             'image' => $image,
         ]);
 
+        $project->skills()->sync($request->skill_ids);
+
         return Redirect::route('projects.index')->with('message', 'Project updated successfully!');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Project $project)
+    {
+        $skills = Skill::all();
+
+        return Inertia::render('Projects/Edit', compact('project', 'skills'));
+    }
+
+    public function show($id)
+    {
+        $project = Project::findOrFail($id);
+
+        return Inertia::render('ProjectDetail', ['project' => $project]);
     }
 
     /**

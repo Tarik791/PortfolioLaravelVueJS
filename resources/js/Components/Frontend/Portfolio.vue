@@ -11,7 +11,7 @@ defineProps({
         <div class="container mx-auto">
             <div class="flex flex-col items-center text-center">
                 <h2 class="section-title">My Skills & Projects</h2>
-                <p class="subtitle">Explore my diverse skills and projects. From backend technologies like PHP and Laravel to frontend frameworks such as ReactJS and Vue.js, I’ve worked with a wide range of languages and tools. Dive into my latest projects to see how I bring ideas to life with languages like JavaScript, Go, Python, and .NET, and discover the innovative solutions I've developed.</p>
+                <p class="subtitle"><span class="font-bold">Note: These are projects I worked on independently, not related to my experience at the companies where I work.</span>  <br><br><br> Explore my diverse skills and projects. From backend technologies like PHP and Laravel to frontend frameworks such as ReactJS and Vue.js, I’ve worked with a wide range of languages and tools. Dive into my latest projects to see how I bring ideas to life with languages like JavaScript, Go, Python, and .NET, and discover the innovative solutions I've developed.</p>
             </div>
         </div>
         <Projects :skills="skills" :projects="projects" />

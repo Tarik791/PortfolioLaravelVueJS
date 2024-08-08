@@ -8,17 +8,21 @@ const props = defineProps({
 });
 
 const filteredProjects = ref(props.projects.data);
-const selectedSkill = ref("all");
+const selectedSkills = ref([]);
 
-const filterProjects = (id) => {
-    if (id === "all") {
-        filteredProjects.value = props.projects.data;
-        selectedSkill.value = id;
+const filterProjects = (skillId) => {
+    if (selectedSkills.value.includes(skillId)) {
+        selectedSkills.value = selectedSkills.value.filter(id => id !== skillId);
     } else {
-        filteredProjects.value = props.projects.data.filter((project) => {
-            return project.skill.id === id;
-        });
-        selectedSkill.value = id;
+        selectedSkills.value.push(skillId);
+    }
+
+    if (selectedSkills.value.length === 0) {
+        filteredProjects.value = props.projects.data;
+    } else {
+        filteredProjects.value = props.projects.data.filter(project => 
+            project.skills.some(skill => selectedSkills.value.includes(skill.id))
+        );
     }
 };
 </script>
@@ -29,10 +33,10 @@ const filterProjects = (id) => {
             <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 justify-evenly items-center">
                 <li class="cursor-pointer capitalize m-4">
                     <button
-                        @click="filterProjects('all')"
+                        @click="filterProjects(null)"
                         class="flex text-center px-4 py-2 hover:text-light-tail-500 dark:text-dark-tail-100"
                         :class="[
-                            selectedSkill === 'all'
+                            selectedSkills.length === 0
                                 ? 'text-light-tail-500 dark:text-dark-secondary'
                                 : ''
                         ]"
@@ -42,19 +46,19 @@ const filterProjects = (id) => {
                 </li>
                 <li
                     class="cursor-pointer capitalize m-4"
-                    v-for="projectSkill in skills.data"
-                    :key="projectSkill.id"
+                    v-for="skill in skills.data"
+                    :key="skill.id"
                 >
                     <button
-                        @click="filterProjects(projectSkill.id)"
+                        @click="filterProjects(skill.id)"
                         class="flex text-center px-4 py-2 hover:text-light-tail-500 dark:text-dark-tail-100"
                         :class="[
-                            selectedSkill === projectSkill.id
+                            selectedSkills.includes(skill.id)
                                 ? 'text-light-tail-500 dark:text-dark-secondary'
                                 : ''
                         ]"
                     >
-                        {{ projectSkill.name }}
+                        {{ skill.name }}
                     </button>
                 </li>
             </ul>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -34,6 +35,15 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $request->authenticate();
+
+        // Proverite da li je korisnik administrator
+        $user = Auth::user();
+        if (! $user->admin) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => ['You are not authorized to access this application.'],
+            ]);
+        }
 
         $request->session()->regenerate();
 
