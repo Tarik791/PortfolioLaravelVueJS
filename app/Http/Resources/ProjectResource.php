@@ -15,12 +15,12 @@ class ProjectResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'name'=>$this->name,
-            'image'=>asset('storage/'. $this->image),
-            'skill'=> new SkillResource($this->whenLoaded('skill')),
-            'project_url'=>$this->project_url,
-        
+            'id' => $this->id,
+            'name' => $this->name,
+            'image' => asset('storage/'.$this->image),
+            'skill' => new SkillResource($this->whenLoaded('skill')),
+            'project_url' => $this->project_url,
+
         ];
     }
 }

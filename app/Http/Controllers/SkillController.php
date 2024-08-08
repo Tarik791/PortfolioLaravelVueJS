@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SkillResource;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Skill;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class SkillController extends Controller
 {
@@ -22,8 +22,6 @@ class SkillController extends Controller
         $skills = SkillResource::collection(Skill::all());
 
         return Inertia::render('Skills/Index', compact('skills'));
-
-
     }
 
     /**
@@ -49,22 +47,21 @@ class SkillController extends Controller
         //
         $request->validate([
             'image' => ['required', 'image'],
-            'name' => ['required', 'min:3']
+            'name' => ['required', 'min:3'],
         ]);
 
-        if($request->hasFile('image')){
-            $image = $request->file('image')->store('skills', 'public');            Skill::create([
-                'name'=>$request->name,
-                'image'=> $image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image')->store('skills', 'public');
+            Skill::create([
+                'name' => $request->name,
+                'image' => $image,
             ]);
 
             return Redirect::route('skills.index');
-
         }
 
-        return Redirect::back()->with('message', 'Skill created successfully!');;
+        return Redirect::back()->with('message', 'Skill created successfully!');
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -77,7 +74,6 @@ class SkillController extends Controller
         //
 
         return Inertia::render('Skills/Edit', compact('skill'));
-
     }
 
     /**
@@ -92,20 +88,19 @@ class SkillController extends Controller
         //
         $image = $skill->image;
         $request->validate([
-            'name' => ['required', 'min:3']
+            'name' => ['required', 'min:3'],
         ]);
-        if($request->hasFile('image')){
-
+        if ($request->hasFile('image')) {
             Storage::delete($skill->image);
             $image = $request->file('image')->store('skills', 'public');
         }
 
         $skill->update([
             'name' => $request->name,
-            'image' => $image
+            'image' => $image,
         ]);
 
-        return Redirect::route('skills.index')->with('message', 'Skill updated successfully!');;
+        return Redirect::route('skills.index')->with('message', 'Skill updated successfully!');
     }
 
     /**
@@ -118,10 +113,9 @@ class SkillController extends Controller
     {
         //
 
-
         Storage::delete($skill->image);
         $skill->delete();
 
-        return Redirect::back()->with('message', 'Skill deleted successfully!');;
+        return Redirect::back()->with('message', 'Skill deleted successfully!');
     }
 }
